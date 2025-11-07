@@ -1,0 +1,26 @@
+# SwiftLint Configuration for PacemakerID
+# Using mostly defaults with minimal customization
+
+# Paths to exclude
+excluded:
+  - Pods
+  - build
+  - DerivedData
+  - .build
+
+# Disable only the most annoying rules
+disabled_rules:
+  - line_length     # Let SwiftFormat handle this
+  - todo            # TODOs are fine during development
+  - trailing_comma  # Personal preference
+
+# Allow common short variable names
+identifier_name:
+  excluded:
+    - i
+    - id
+    - x
+    - y
+    - z
+
+# That's it! Use all other defaults

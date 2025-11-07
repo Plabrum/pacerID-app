@@ -1,0 +1,18 @@
+# SwiftFormat Configuration for PacemakerID
+# Using mostly defaults with minimal customization
+
+# Exclude build artifacts
+--exclude Pods,build,DerivedData,.build
+
+# Basic style preferences
+--indent 4
+--maxwidth 120
+
+# Minimal rule customization (most are defaults)
+--self init-only      # Only use 'self' in init
+--stripunusedargs always  # Remove unused function arguments
+
+# Swift version
+--swiftversion 5.9
+
+# That's it! Let SwiftFormat use its sensible defaults for everything else
