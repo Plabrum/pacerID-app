@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>PacemakerID needs camera access to photograph X-rays and identify pacemaker devices.</string>
+	<string>Pacer-ID needs camera access to photograph X-rays and identify pacemaker devices.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIRequiredDeviceCapabilities</key>

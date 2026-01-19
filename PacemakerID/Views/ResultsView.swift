@@ -36,7 +36,7 @@ struct ResultsView: View {
 
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Pacemaker Identification")
+            Text("Device Identification")
                 .font(.title2)
                 .fontWeight(.bold)
 

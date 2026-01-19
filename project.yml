@@ -1,4 +1,4 @@
-name: PacemakerID
+name: PacerID
 
 options:
   bundleIdPrefix: com.plabrum
@@ -17,7 +17,7 @@ settings:
     DEVELOPMENT_TEAM: "AH7U25NYNS"
 
 targets:
-  PacemakerID:
+  PacerID:
     type: application
     platform: iOS
 
@@ -56,8 +56,8 @@ targets:
 
     settings:
       base:
-        PRODUCT_NAME: PacemakerID
-        PRODUCT_BUNDLE_IDENTIFIER: com.plabrum.PacemakerID
+        PRODUCT_NAME: PacerID
+        PRODUCT_BUNDLE_IDENTIFIER: com.plabrum.PacerID
         INFOPLIST_FILE: PacemakerID/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1,2" # iPhone and iPad
@@ -90,10 +90,10 @@ targets:
     dependencies: []
 
 schemes:
-  PacemakerID:
+  PacerID:
     build:
       targets:
-        PacemakerID: all
+        PacerID: all
     run:
       config: Debug
     test:

@@ -42,7 +42,7 @@ struct CameraView: View {
                     .padding(.bottom, 40)
                 }
             }
-            .navigationTitle("PacemakerID")
+            .navigationTitle("Pacer-ID")
             .navigationBarTitleDisplayMode(.inline)
             .task {
                 await viewModel.setupCamera()
