@@ -35,11 +35,12 @@ targets:
         CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
         CFBundleInfoDictionaryVersion: "6.0"
         CFBundleName: $(PRODUCT_NAME)
+        CFBundleDisplayName: Pacer-ID
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
-        NSCameraUsageDescription: "PacemakerID needs camera access to photograph X-rays and identify pacemaker devices."
+        NSCameraUsageDescription: "Pacer-ID needs camera access to photograph X-rays and identify pacemaker devices."
         UILaunchScreen: {}
         UIRequiredDeviceCapabilities:
           - armv7
