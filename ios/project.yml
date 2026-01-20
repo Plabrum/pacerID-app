@@ -32,6 +32,8 @@ targets:
         excludes:
           - "*.md"
           - "*.txt"
+      - path: ../ml/models/current
+        optional: true
 
     info:
       path: PacemakerID/Info.plist
