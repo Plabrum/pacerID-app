@@ -80,10 +80,72 @@ targets:
         SWIFT_COMPILATION_MODE: wholemodule
 
     scheme:
-      testTargets: []
-      gatherCoverageData: false
+      testTargets:
+        - PacerIDTests
+        - PacerIDIntegrationTests
+        - PacerIDUITests
+      gatherCoverageData: true
 
     dependencies: []
+
+  # Unit Tests
+  PacerIDTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: PacemakerIDTests
+        excludes:
+          - "*.md"
+    dependencies:
+      - target: PacerID
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.plabrum.PacerIDTests
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/PacerID.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PacerID"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    scheme:
+      gatherCoverageData: true
+
+  # Integration Tests
+  PacerIDIntegrationTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: PacemakerIDIntegrationTests
+        excludes:
+          - "*.md"
+    dependencies:
+      - target: PacerID
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.plabrum.PacerIDIntegrationTests
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/PacerID.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PacerID"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    scheme:
+      gatherCoverageData: true
+
+  # UI Tests
+  PacerIDUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: PacemakerIDUITests
+        excludes:
+          - "*.md"
+    dependencies:
+      - target: PacerID
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.plabrum.PacerIDUITests
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: PacerID
+    scheme:
+      gatherCoverageData: true
 
 schemes:
   PacerID:
@@ -94,6 +156,11 @@ schemes:
       config: Debug
     test:
       config: Debug
+      targets:
+        - PacerIDTests
+        - PacerIDIntegrationTests
+        - PacerIDUITests
+      gatherCoverageData: true
     profile:
       config: Release
     analyze:

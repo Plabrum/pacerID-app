@@ -4,12 +4,12 @@ import SwiftUI
 struct PacemakerIDApp: App {
     // MARK: - Dependencies
 
-    // Use mock classifier for demo; replace with actual classifier in production
-    private let classifier: PacemakerClassifier = MockPacemakerClassifier()
+    @StateObject private var dependencies = AppDependencies.shared
 
     var body: some Scene {
         WindowGroup {
-            CameraView(viewModel: CameraViewModel(classifier: classifier))
+            LandingView(classifier: dependencies.classifier)
+                .environment(\.appDependencies, dependencies)
         }
     }
 }

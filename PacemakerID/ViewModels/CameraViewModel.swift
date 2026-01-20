@@ -5,7 +5,7 @@ import SwiftUI
 final class CameraViewModel: ObservableObject {
     // MARK: - Published Properties
 
-    @Published var cameraService = CameraService()
+    @Published var cameraService: any CameraServiceProtocol
     @Published var isProcessing = false
     @Published var classifications: [Classification]?
     @Published var showResults = false
@@ -13,11 +13,15 @@ final class CameraViewModel: ObservableObject {
 
     // MARK: - Dependencies
 
-    private let classifier: PacemakerClassifier
+    private nonisolated(unsafe) let classifier: PacemakerClassifier
 
     // MARK: - Initialization
 
-    init(classifier: PacemakerClassifier) {
+    init(
+        classifier: PacemakerClassifier,
+        cameraServiceFactory: (() -> any CameraServiceProtocol)? = nil
+    ) {
+        self.cameraService = cameraServiceFactory?() ?? CameraService()
         self.classifier = classifier
     }
 
@@ -33,7 +37,7 @@ final class CameraViewModel: ObservableObject {
 
         do {
             try await cameraService.setupSession()
-            cameraService.startSession()
+            await cameraService.startSession()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -70,6 +74,8 @@ final class CameraViewModel: ObservableObject {
     // MARK: - Cleanup
 
     func cleanup() {
-        cameraService.stopSession()
+        Task {
+            await cameraService.stopSession()
+        }
     }
 }

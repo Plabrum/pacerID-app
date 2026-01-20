@@ -3,7 +3,7 @@ import UIKit
 
 /// Service for managing camera capture session
 @MainActor
-final class CameraService: NSObject, ObservableObject {
+final class CameraService: NSObject, ObservableObject, CameraServiceProtocol {
     // MARK: - Published Properties
 
     @Published var isAuthorized = false
@@ -12,13 +12,14 @@ final class CameraService: NSObject, ObservableObject {
 
     // MARK: - Private Properties
 
-    private let captureSession = AVCaptureSession()
-    private let photoOutput = AVCapturePhotoOutput()
+    private nonisolated(unsafe) let captureSession = AVCaptureSession()
+    private nonisolated(unsafe) let photoOutput = AVCapturePhotoOutput()
     private var photoContinuation: CheckedContinuation<CGImage, Error>?
+    private let sessionQueue = DispatchQueue(label: "com.pacerid.camera.session")
 
     // MARK: - Public Properties
 
-    var session: AVCaptureSession { captureSession }
+    var session: AVCaptureSession? { captureSession }
 
     // MARK: - Initialization
 
@@ -50,57 +51,77 @@ final class CameraService: NSObject, ObservableObject {
             throw CameraError.notAuthorized
         }
 
-        captureSession.beginConfiguration()
-        captureSession.sessionPreset = .photo
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            sessionQueue.async { [weak self] in
+                guard let self else {
+                    continuation.resume(throwing: CameraError.unknown)
+                    return
+                }
 
-        // Add video input
-        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
-            captureSession.commitConfiguration()
-            throw CameraError.noCameraAvailable
-        }
+                captureSession.beginConfiguration()
+                captureSession.sessionPreset = .photo
 
-        do {
-            let videoInput = try AVCaptureDeviceInput(device: camera)
-            guard captureSession.canAddInput(videoInput) else {
+                // Add video input
+                guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+                    captureSession.commitConfiguration()
+                    continuation.resume(throwing: CameraError.noCameraAvailable)
+                    return
+                }
+
+                do {
+                    let videoInput = try AVCaptureDeviceInput(device: camera)
+                    guard captureSession.canAddInput(videoInput) else {
+                        captureSession.commitConfiguration()
+                        continuation.resume(throwing: CameraError.cannotAddInput)
+                        return
+                    }
+                    captureSession.addInput(videoInput)
+                } catch {
+                    captureSession.commitConfiguration()
+                    continuation.resume(throwing: CameraError.cannotAddInput)
+                    return
+                }
+
+                // Add photo output
+                guard captureSession.canAddOutput(photoOutput) else {
+                    captureSession.commitConfiguration()
+                    continuation.resume(throwing: CameraError.cannotAddOutput)
+                    return
+                }
+                captureSession.addOutput(photoOutput)
+
                 captureSession.commitConfiguration()
-                throw CameraError.cannotAddInput
+                continuation.resume()
             }
-            captureSession.addInput(videoInput)
-        } catch {
-            captureSession.commitConfiguration()
-            throw CameraError.cannotAddInput
         }
-
-        // Add photo output
-        guard captureSession.canAddOutput(photoOutput) else {
-            captureSession.commitConfiguration()
-            throw CameraError.cannotAddOutput
-        }
-        captureSession.addOutput(photoOutput)
-
-        captureSession.commitConfiguration()
     }
 
     // MARK: - Session Control
 
-    func startSession() {
+    func startSession() async {
         guard !isSessionRunning else { return }
-        Task {
-            captureSession.startRunning()
-            await MainActor.run {
-                isSessionRunning = captureSession.isRunning
+
+        await withCheckedContinuation { continuation in
+            sessionQueue.async { [weak self] in
+                self?.captureSession.startRunning()
+                continuation.resume()
             }
         }
+
+        isSessionRunning = captureSession.isRunning
     }
 
-    func stopSession() {
+    func stopSession() async {
         guard isSessionRunning else { return }
-        Task {
-            captureSession.stopRunning()
-            await MainActor.run {
-                isSessionRunning = false
+
+        await withCheckedContinuation { continuation in
+            sessionQueue.async { [weak self] in
+                self?.captureSession.stopRunning()
+                continuation.resume()
             }
         }
+
+        isSessionRunning = false
     }
 
     // MARK: - Photo Capture
@@ -108,6 +129,10 @@ final class CameraService: NSObject, ObservableObject {
     func capturePhoto() async throws -> CGImage {
         guard isSessionRunning else {
             throw CameraError.sessionNotRunning
+        }
+
+        guard photoContinuation == nil else {
+            throw CameraError.captureInProgress
         }
 
         let settings = AVCapturePhotoSettings()
@@ -128,21 +153,27 @@ extension CameraService: AVCapturePhotoCaptureDelegate {
         didFinishProcessingPhoto photo: AVCapturePhoto,
         error: Error?
     ) {
-        Task { @MainActor in
-            if let error {
-                photoContinuation?.resume(throwing: CameraError.captureFailed(error))
-                return
-            }
-
-            guard let imageData = photo.fileDataRepresentation(),
+        // Extract data on nonisolated context to avoid data race
+        let result: Result<CGImage, Error> = if let error {
+            .failure(CameraError.captureFailed(error))
+        } else if let imageData = photo.fileDataRepresentation(),
                   let uiImage = UIImage(data: imageData),
                   let cgImage = uiImage.cgImage
-            else {
-                photoContinuation?.resume(throwing: CameraError.invalidImageData)
-                return
-            }
+        {
+            .success(cgImage)
+        } else {
+            .failure(CameraError.invalidImageData)
+        }
 
-            photoContinuation?.resume(returning: cgImage)
+        Task { @MainActor in
+            defer { photoContinuation = nil }
+
+            switch result {
+            case let .success(cgImage):
+                photoContinuation?.resume(returning: cgImage)
+            case let .failure(error):
+                photoContinuation?.resume(throwing: error)
+            }
         }
     }
 }
@@ -155,6 +186,7 @@ enum CameraError: LocalizedError {
     case cannotAddInput
     case cannotAddOutput
     case sessionNotRunning
+    case captureInProgress
     case captureFailed(Error)
     case invalidImageData
     case unknown
@@ -171,6 +203,8 @@ enum CameraError: LocalizedError {
             "Cannot configure camera output."
         case .sessionNotRunning:
             "Camera session is not running."
+        case .captureInProgress:
+            "A photo capture is already in progress."
         case let .captureFailed(error):
             "Failed to capture photo: \(error.localizedDescription)"
         case .invalidImageData:
