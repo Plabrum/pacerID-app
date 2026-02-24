@@ -9,7 +9,7 @@ struct PacerIDApp: App {
     var body: some Scene {
         WindowGroup {
             LandingView(classifier: dependencies.classifier)
-                .environment(\.appDependencies, dependencies)
+                .environmentObject(dependencies)
         }
     }
 }

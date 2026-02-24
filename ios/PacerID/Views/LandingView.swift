@@ -5,7 +5,7 @@ struct LandingView: View {
     // MARK: - Dependencies
 
     let classifier: PacemakerClassifier
-    @Environment(\.appDependencies) private var dependencies
+    @EnvironmentObject private var dependencies: AppDependencies
 
     // MARK: - State
 
