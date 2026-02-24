@@ -55,6 +55,9 @@ Carthage/Build/
 Dependencies/
 .accio/
 
+# Un-ignore app source folders that happen to be named Dependencies/
+!ios/PacerID/Dependencies/
+
 # fastlane
 fastlane/report.xml
 fastlane/Preview.html
