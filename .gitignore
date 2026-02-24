@@ -2,8 +2,7 @@
 # iOS / Xcode
 # ============================================================
 
-# XcodeGen - Project file is generated from project.yml
-ios/*.xcodeproj
+# XcodeGen - project.yml is the source of truth, .xcodeproj is committed for CI
 !ios/*.xcodeproj/project.xcworkspace/
 !ios/*.xcodeproj/xcshareddata/
 ios/*.xcworkspace
