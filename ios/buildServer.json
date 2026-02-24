@@ -12,8 +12,8 @@
 	"argv": [
 		"/opt/homebrew/bin/xcode-build-server"
 	],
-	"workspace": "/Users/phil/repos/pacerID-app/PacemakerID.xcodeproj/project.xcworkspace",
-	"build_root": "/Users/phil/Library/Developer/Xcode/DerivedData/PacemakerID-fynxhdiqpmznjjgljrkgithsoqmg",
-	"scheme": "PacemakerID",
+	"workspace": "/Users/phil/repos/pacerID-app/PacerID.xcodeproj/project.xcworkspace",
+	"build_root": "/Users/phil/Library/Developer/Xcode/DerivedData/PacerID-fynxhdiqpmznjjgljrkgithsoqmg",
+	"scheme": "PacerID",
 	"kind": "xcode"
 }

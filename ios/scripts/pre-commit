@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Pre-commit hook for PacemakerID
+# Pre-commit hook for PacerID
 # Runs SwiftFormat and SwiftLint on staged Swift files
 #
 # To install: Run `make install-hooks` or `./scripts/install-hooks.sh`

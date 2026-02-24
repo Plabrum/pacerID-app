@@ -7,7 +7,7 @@ This is a monorepo with iOS app and ML training:
 ```
 pacerID-app/
 ├── ios/              # iOS application
-│   ├── PacemakerID/  # Source code (SwiftUI + MVVM)
+│   ├── PacerID/  # Source code (SwiftUI + MVVM)
 │   ├── project.yml   # XcodeGen config
 │   └── *Tests/       # Test suites
 ├── ml/               # ML training pipeline
@@ -37,9 +37,10 @@ pacerID-app/
    - Use `make sync-model VERSION=vX.Y.Z` to publish new model
 
 4. **Datasets**:
-   - Stored in `ml/datasets/` (not in git, added externally)
-   - Structure: raw/, processed/, metadata/
-   - See `ml/datasets/README.md` for format
+   - Downloaded automatically from Kaggle via `make download-data`
+   - Stored in `ml/datasets/` (not in git)
+   - Structure: raw/ (from Kaggle), processed/ (symlinks to raw/)
+   - Dataset source configured in `ml/configs/base.yaml`
 
 5. **iOS Architecture**:
    - MVVM-Light pattern
@@ -60,10 +61,14 @@ make format     # SwiftFormat
 
 ### Working on ML
 ```bash
-make install-ml           # First time setup
-conda activate pacerid-ml
-make train                # Train model
-make export               # Export to CoreML
+# First time setup
+make install-ml                 # Create conda environment
+conda activate pacerid-ml       # Activate environment
+make download-data              # Download training data from Kaggle
+
+# Training workflow
+make train                      # Train model
+make export                     # Export to CoreML
 make sync-model VERSION=v1.0.0  # Publish to iOS
 ```
 
@@ -77,13 +82,17 @@ After training a new model:
 
 - `Makefile` - All build commands
 - `ios/project.yml` - Xcode project definition
-- `ios/PacemakerID/Protocols/PacemakerClassifier.swift` - ML classifier interface
-- `ml/configs/base.yaml` - Training configuration
-- `ml/scripts/sync_model.sh` - Model publishing script
+- `ios/PacerID/Protocols/PacemakerClassifier.swift` - ML classifier interface
+- `ml/configs/base.yaml` - **Single source of truth** for all paths and training settings
+- `ml/scripts/download_data.py` - Downloads dataset from Kaggle
+- `ml/scripts/train.py` - Main training script
+- `ml/scripts/export.py` - Exports PyTorch model to CoreML
+- `ml/scripts/sync_model.sh` - Publishes model to versioned storage
 
 ## When Making Changes
 
 - **iOS code changes**: Just edit and build
 - **New files**: May need `make clean && make generate` to update project
 - **Model path changes**: Update `ios/project.yml` sources
-- **Training config**: Edit `ml/configs/base.yaml`
+- **Training config or dataset paths**: Edit `ml/configs/base.yaml` (single source of truth)
+- **All ML scripts read from config**: No hardcoded paths in Python code

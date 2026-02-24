@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Install git hooks for PacemakerID
+# Install git hooks for PacerID
 #
 
 set -e

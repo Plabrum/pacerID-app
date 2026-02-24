@@ -1,4 +1,4 @@
-# PacemakerID - XcodeGen Setup Guide
+# PacerID - XcodeGen Setup Guide
 
 This guide will help you set up the project using XcodeGen, a tool that generates Xcode projects from a YAML specification file.
 
@@ -32,28 +32,28 @@ xcodegen --version
 ```bash
 cd /Users/phil/repos/pacerID-app
 
-# Generate PacemakerID.xcodeproj from project.yml
+# Generate PacerID.xcodeproj from project.yml
 xcodegen generate
 
 # You should see output like:
 # ⚙️  Generating project...
 # ⚙️  Writing project...
-# Created project at /Users/phil/repos/pacerID-app/PacemakerID.xcodeproj
+# Created project at /Users/phil/repos/pacerID-app/PacerID.xcodeproj
 ```
 
 ### 3. Open the Project
 
 ```bash
 # Open in Xcode
-open PacemakerID.xcodeproj
+open PacerID.xcodeproj
 
-# Or just double-click PacemakerID.xcodeproj in Finder
+# Or just double-click PacerID.xcodeproj in Finder
 ```
 
 ### 4. Configure Code Signing
 
-1. In Xcode, select the **PacemakerID** project in the Navigator
-2. Select the **PacemakerID** target
+1. In Xcode, select the **PacerID** project in the Navigator
+2. Select the **PacerID** target
 3. Go to **Signing & Capabilities** tab
 4. Select your **Team** from the dropdown
 
@@ -79,9 +79,9 @@ Then regenerate: `xcodegen generate`
 ```
 pacerID-app/
 ├── project.yml                    # XcodeGen configuration (SOURCE OF TRUTH)
-├── PacemakerID.xcodeproj/         # Generated (DO NOT EDIT, ignored by git)
-├── PacemakerID/                   # Source code
-│   ├── PacemakerIDApp.swift
+├── PacerID.xcodeproj/         # Generated (DO NOT EDIT, ignored by git)
+├── PacerID/                   # Source code
+│   ├── PacerIDApp.swift
 │   ├── Info.plist
 │   ├── Assets.xcassets/
 │   ├── Models/
@@ -109,8 +109,8 @@ pacerID-app/
 Just create the file in the appropriate directory:
 
 ```bash
-# XcodeGen automatically includes all files in PacemakerID/
-touch PacemakerID/Services/RealPacemakerClassifier.swift
+# XcodeGen automatically includes all files in PacerID/
+touch PacerID/Services/RealPacemakerClassifier.swift
 xcodegen generate
 ```
 
@@ -123,10 +123,10 @@ options:
   bundleIdPrefix: com.yourcompany  # Change this
 
 targets:
-  PacemakerID:
+  PacerID:
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.yourcompany.PacemakerID  # And this
+        PRODUCT_BUNDLE_IDENTIFIER: com.yourcompany.PacerID  # And this
 ```
 
 Then regenerate:
@@ -141,7 +141,7 @@ Edit `project.yml` and add packages:
 
 ```yaml
 targets:
-  PacemakerID:
+  PacerID:
     dependencies:
       - package: Alamofire
         product: Alamofire
@@ -168,7 +168,7 @@ Edit `project.yml`:
 
 ```yaml
 targets:
-  PacemakerID:
+  PacerID:
     settings:
       base:
         ENABLE_BITCODE: NO
@@ -184,7 +184,7 @@ targets:
 git clone <repository>
 cd pacerID-app
 xcodegen generate
-open PacemakerID.xcodeproj
+open PacerID.xcodeproj
 ```
 
 #### Daily Workflow
@@ -197,7 +197,7 @@ git pull
 xcodegen generate
 
 # Open and work
-open PacemakerID.xcodeproj
+open PacerID.xcodeproj
 ```
 
 #### Before Committing
@@ -206,7 +206,7 @@ open PacemakerID.xcodeproj
 # Only commit source files and project.yml
 # The .xcodeproj is automatically ignored by .gitignore
 
-git add PacemakerID/
+git add PacerID/
 git add project.yml
 git commit -m "Add new feature"
 git push
@@ -217,7 +217,7 @@ git push
 ### Current Configuration (`project.yml`)
 
 ```yaml
-name: PacemakerID
+name: PacerID
 
 options:
   bundleIdPrefix: com.yourcompany      # Base bundle identifier
@@ -227,23 +227,23 @@ options:
   xcodeVersion: "15.0"                 # Xcode version
 
 targets:
-  PacemakerID:
+  PacerID:
     type: application                  # App target
     platform: iOS                      # iOS platform
 
     sources:
-      - path: PacemakerID              # Auto-include all files
+      - path: PacerID              # Auto-include all files
         excludes:
           - "*.md"                     # Exclude markdown files
 
     info:
-      path: PacemakerID/Info.plist     # Info.plist location
+      path: PacerID/Info.plist     # Info.plist location
       properties:
         NSCameraUsageDescription: "..." # Camera permission
 
     settings:
       base:
-        PRODUCT_NAME: PacemakerID
+        PRODUCT_NAME: PacerID
         TARGETED_DEVICE_FAMILY: "1,2"  # iPhone and iPad
         ENABLE_PREVIEWS: YES            # SwiftUI previews
 
@@ -272,27 +272,27 @@ Add a test target:
 
 ```yaml
 targets:
-  PacemakerID:
+  PacerID:
     type: application
     # ... existing config
 
-  PacemakerIDTests:
+  PacerIDTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - PacemakerIDTests
+      - PacerIDTests
     dependencies:
-      - target: PacemakerID
+      - target: PacerID
 ```
 
 ### Custom Schemes
 
 ```yaml
 schemes:
-  PacemakerID:
+  PacerID:
     build:
       targets:
-        PacemakerID: all
+        PacerID: all
     run:
       config: Debug
       commandLineArguments:
@@ -306,7 +306,7 @@ schemes:
 
 ```yaml
 targets:
-  PacemakerID:
+  PacerID:
     settings:
       debug:
         SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG MOCK_CLASSIFIER
@@ -440,7 +440,7 @@ If you started with a manual Xcode project:
 2. The `project.yml` is already created
 3. Delete the old `.xcodeproj` if it exists
 4. Generate new project: `xcodegen generate`
-5. Open and configure signing: `open PacemakerID.xcodeproj`
+5. Open and configure signing: `open PacerID.xcodeproj`
 
 ## Resources
 

@@ -1,6 +1,6 @@
 # Linting and Formatting Guide
 
-PacemakerID uses automated linting and formatting with **minimal configuration** - we trust the defaults!
+PacerID uses automated linting and formatting with **minimal configuration** - we trust the defaults!
 
 ## Philosophy
 

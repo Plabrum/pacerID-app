@@ -1,4 +1,4 @@
-# PacemakerID - Quick Setup Guide
+# PacerID - Quick Setup Guide
 
 This guide will help you create the Xcode project and run the app.
 
@@ -25,10 +25,10 @@ Enter the following project details:
 
 | Field | Value |
 |-------|-------|
-| Product Name | `PacemakerID` |
+| Product Name | `PacerID` |
 | Team | Select your development team |
 | Organization Identifier | `com.yourcompany` (or your identifier) |
-| Bundle Identifier | Will auto-generate (e.g., `com.yourcompany.PacemakerID`) |
+| Bundle Identifier | Will auto-generate (e.g., `com.yourcompany.PacerID`) |
 | Interface | **SwiftUI** |
 | Language | **Swift** |
 | Storage | None (uncheck Core Data) |
@@ -42,7 +42,7 @@ Click **Next**, then choose the `pacerID-app` directory as the save location.
 
 Xcode creates some default files we don't need:
 
-1. In the Project Navigator (left sidebar), find these files in the `PacemakerID` folder:
+1. In the Project Navigator (left sidebar), find these files in the `PacerID` folder:
    - `ContentView.swift` (delete it)
    - `Assets.xcassets` (keep this, but it will be empty)
 2. Right-click each file and select **Delete**
@@ -52,47 +52,47 @@ Xcode creates some default files we don't need:
 
 Now add all the source files:
 
-1. In Project Navigator, right-click on the `PacemakerID` folder (the one with the blue icon)
-2. Select **Add Files to "PacemakerID"...**
-3. Navigate to the `PacemakerID` folder in Finder
+1. In Project Navigator, right-click on the `PacerID` folder (the one with the blue icon)
+2. Select **Add Files to "PacerID"...**
+3. Navigate to the `PacerID` folder in Finder
 4. Select **all folders and files** inside:
    - `Models` folder
    - `Protocols` folder
    - `Services` folder
    - `ViewModels` folder
    - `Views` folder
-   - `PacemakerIDApp.swift`
+   - `PacerIDApp.swift`
 5. In the dialog, ensure these options are selected:
    - ✅ **Copy items if needed**
    - ✅ **Create groups** (not folder references)
-   - ✅ Your target (PacemakerID) is checked
+   - ✅ Your target (PacerID) is checked
 6. Click **Add**
 
 ### 5. Configure Info.plist
 
 1. In Project Navigator, select `Info.plist`
 2. Delete it (Move to Trash)
-3. Right-click the `PacemakerID` folder > **Add Files to "PacemakerID"...**
-4. Select the `Info.plist` file from the `PacemakerID` folder
+3. Right-click the `PacerID` folder > **Add Files to "PacerID"...**
+4. Select the `Info.plist` file from the `PacerID` folder
 5. Ensure "Copy items if needed" is checked
 6. Click **Add**
 
 **Alternative method**:
 1. Select the project in Project Navigator (top-level item)
-2. Select the `PacemakerID` target
+2. Select the `PacerID` target
 3. Go to the **Info** tab
 4. Click the **Custom iOS Target Properties** section
 5. Add this key if not present:
    - Key: `Privacy - Camera Usage Description`
-   - Value: `PacemakerID needs camera access to photograph X-rays and identify pacemaker devices.`
+   - Value: `PacerID needs camera access to photograph X-rays and identify pacemaker devices.`
 
 ### 6. Verify Project Structure
 
 Your Project Navigator should look like this:
 
 ```
-PacemakerID
-├── PacemakerIDApp.swift
+PacerID
+├── PacerIDApp.swift
 ├── Models
 │   └── Classification.swift
 ├── Protocols
@@ -160,7 +160,7 @@ PacemakerID
 ### Camera preview is black
 - Ensure you're running on a physical device (not Simulator)
 - Check that camera permissions were granted
-- Go to Settings > Privacy > Camera and enable PacemakerID
+- Go to Settings > Privacy > Camera and enable PacerID
 
 ### Build errors about missing files
 - Verify all Swift files are added to the project
@@ -197,4 +197,4 @@ If you encounter issues:
 
 ---
 
-**Ready to go!** Your PacemakerID app should now be running on your device.
+**Ready to go!** Your PacerID app should now be running on your device.

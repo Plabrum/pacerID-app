@@ -28,15 +28,15 @@ targets:
     platform: iOS
 
     sources:
-      - path: PacemakerID
+      - path: PacerID
         excludes:
           - "*.md"
           - "*.txt"
-      - path: ../ml/models/current
+      - path: ../ml/models/PacemakerClassifier.mlpackage
         optional: true
 
     info:
-      path: PacemakerID/Info.plist
+      path: PacerID/Info.plist
       properties:
         CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
         CFBundleExecutable: $(EXECUTABLE_NAME)
@@ -66,7 +66,7 @@ targets:
       base:
         PRODUCT_NAME: PacerID
         PRODUCT_BUNDLE_IDENTIFIER: com.plabrum.PacerID
-        INFOPLIST_FILE: PacemakerID/Info.plist
+        INFOPLIST_FILE: PacerID/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1,2" # iPhone and iPad
         SWIFT_EMIT_LOC_STRINGS: YES
@@ -95,9 +95,10 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: PacemakerIDTests
+      - path: PacerIDTests
         excludes:
           - "*.md"
+      - path: Testing
     dependencies:
       - target: PacerID
     settings:
@@ -115,9 +116,10 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: PacemakerIDIntegrationTests
+      - path: PacerIDIntegrationTests
         excludes:
           - "*.md"
+      - path: Testing
     dependencies:
       - target: PacerID
     settings:
@@ -135,7 +137,7 @@ targets:
     type: bundle.ui-testing
     platform: iOS
     sources:
-      - path: PacemakerIDUITests
+      - path: PacerIDUITests
         excludes:
           - "*.md"
     dependencies:

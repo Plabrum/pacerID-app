@@ -1,4 +1,4 @@
-# PacemakerID - Quick Start
+# PacerID - Quick Start
 
 Get up and running in 60 seconds.
 
@@ -25,14 +25,14 @@ make open
 
 This will:
 - Install XcodeGen if needed
-- Generate `PacemakerID.xcodeproj`
+- Generate `PacerID.xcodeproj`
 - Open the project in Xcode
 
 ### 3. Configure Signing
 
 In Xcode:
-1. Select **PacemakerID** project in Navigator
-2. Select **PacemakerID** target
+1. Select **PacerID** project in Navigator
+2. Select **PacerID** target
 3. Go to **Signing & Capabilities**
 4. Select your **Team**
 
@@ -65,7 +65,7 @@ make clean
 Just create the file in the appropriate folder:
 
 ```bash
-touch PacemakerID/Services/RealClassifier.swift
+touch PacerID/Services/RealClassifier.swift
 make generate
 ```
 
@@ -102,9 +102,9 @@ make open             # Open in Xcode
 ## What's Created
 
 ```
-PacemakerID.xcodeproj/    ← Generated (ignored by git)
+PacerID.xcodeproj/    ← Generated (ignored by git)
 project.yml               ← Source of truth
-PacemakerID/             ← Your source code
+PacerID/             ← Your source code
   ├── Models/
   ├── Protocols/
   ├── Services/
@@ -121,7 +121,7 @@ PacemakerID/             ← Your source code
 
 ## Integrating Your ML Model
 
-Replace mock classifier in `PacemakerIDApp.swift`:
+Replace mock classifier in `PacerIDApp.swift`:
 
 ```swift
 // Change this:

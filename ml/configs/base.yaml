@@ -1,0 +1,33 @@
+# Base configuration for pacemaker classifier training
+
+# Dataset configuration
+data:
+  # Data source
+  kaggle_dataset: "jamesphoward/pacemakers"  # Kaggle dataset ID
+
+  # Local paths (relative to ml/ directory)
+  raw_dir: "datasets/raw"           # Where Kaggle data downloads to
+  train_dir: "datasets/Train"  # Training images (organized by class)
+  test_dir: "datasets/Test"    # Test images (organized by class)
+
+  # Data loading settings
+  batch_size: 32
+  img_size: 224
+  num_workers: 0  # Set to 0 for compatibility, increase for faster data loading
+
+# Model configuration
+model:
+  architecture: "densenet121"  # Options: densenet121, resnet50, mobilenet_v3_small
+  pretrained: true  # Use ImageNet pre-trained weights
+
+# Training configuration
+training:
+  epochs: 20
+  learning_rate: 0.001
+  device: "cuda"  # Use "cpu" if GPU not available
+  verbose: true
+
+# Output configuration
+output:
+  dir: "output"  # Directory for checkpoints and logs (relative to ml/)
+  model_name: "PacemakerClassifier"

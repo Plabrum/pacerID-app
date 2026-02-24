@@ -1,4 +1,4 @@
-# PacemakerID - Implementation Notes
+# PacerID - Implementation Notes
 
 Technical details and code reference for developers.
 
@@ -324,7 +324,7 @@ All views have SwiftUI previews:
 
 ### Adding Production Classifier
 
-Replace mock in `PacemakerIDApp.swift`:
+Replace mock in `PacerIDApp.swift`:
 
 ```swift
 // Replace this:
