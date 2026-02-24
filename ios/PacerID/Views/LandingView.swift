@@ -45,7 +45,7 @@ struct LandingView: View {
                     // Capture Image Button
                     Button(action: {
                         showCamera = true
-                    }) {
+                    }, label: {
                         HStack(spacing: 16) {
                             Image(systemName: "camera.fill")
                                 .font(.title2)
@@ -73,14 +73,14 @@ struct LandingView: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .stroke(Color.blue, lineWidth: 2)
                         )
-                    }
+                    })
                     .buttonStyle(.plain)
                     .accessibilityLabel("Capture Image")
 
                     // Upload Image Button
                     Button(action: {
                         showPhotoPicker = true
-                    }) {
+                    }, label: {
                         HStack(spacing: 16) {
                             Image(systemName: "photo.on.rectangle.angled")
                                 .font(.title2)
@@ -108,7 +108,7 @@ struct LandingView: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .stroke(Color.green, lineWidth: 2)
                         )
-                    }
+                    })
                     .buttonStyle(.plain)
                     .accessibilityLabel("Upload Image")
                 }

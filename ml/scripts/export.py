@@ -17,9 +17,11 @@ Usage:
 """
 
 import argparse
+import os
 import sys
 import yaml
 import torch
+import torch.nn as nn
 import coremltools as ct
 from pathlib import Path
 
@@ -27,6 +29,27 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from models import create_model
+
+
+class NormalizedWrapper(nn.Module):
+    """Wraps a model with ImageNet normalization.
+
+    CoreML's ImageType converts pixel values (0-255) to float [0, 1].
+    This wrapper then applies ImageNet normalization so the model receives
+    the same input distribution it was trained on.
+    """
+
+    def __init__(self, model: nn.Module):
+        super().__init__()
+        self.model = model
+        mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+        std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+        self.register_buffer("mean", mean)
+        self.register_buffer("std", std)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = (x - self.mean) / self.std
+        return self.model(x)
 
 
 def export_to_coreml(
@@ -39,20 +62,23 @@ def export_to_coreml(
 
     Args:
         model: Trained PyTorch model
-        output_path: Path to save .mlmodel file
+        output_path: Path to save .mlpackage file
         class_labels: List of class labels (optional)
     """
     print("\nExporting to CoreML...")
 
-    # Set model to evaluation mode
-    model.eval()
+    # Wrap with ImageNet normalization so CoreML receives properly normalized inputs.
+    # CoreML ImageType converts pixels [0-255] → [0, 1]; the wrapper then normalizes
+    # to the ImageNet distribution the model was trained on.
+    wrapped = NormalizedWrapper(model)
+    wrapped.eval()
 
-    # Create example input (batch_size=1, channels=3, height=224, width=224)
+    # Example input in [0, 1] range (what CoreML ImageType provides after /255 conversion)
     example_input = torch.rand(1, 3, 224, 224)
 
-    # Trace the model
-    print("  Tracing model with example input...")
-    traced_model = torch.jit.trace(model, example_input)
+    # Trace the wrapped model
+    print("  Tracing model with normalization wrapper...")
+    traced_model = torch.jit.trace(wrapped, example_input)
 
     # Convert to CoreML
     print("  Converting to CoreML format...")
@@ -128,13 +154,27 @@ def main():
     if args.output:
         output_path = args.output
     else:
-        output_path = ml_dir / "output" / "PacemakerClassifier.mlpackage"
+        output_path = ml_dir / "output" / "PacerIDClassifier.mlpackage"
+
+    # Load class labels from training directory
+    class_labels = None
+    if args.config and Path(args.config).exists():
+        train_dir = ml_dir / config['data']['train_dir']
+        if train_dir.exists():
+            class_labels = sorted(os.listdir(train_dir))
+            print(f"Loaded {len(class_labels)} class labels from {train_dir}")
+        else:
+            print(f"WARNING: Train dir not found at {train_dir}, exporting without class labels")
+
+    num_classes = len(class_labels) if class_labels else args.num_classes
 
     print("="*60)
     print("EXPORT CONFIGURATION")
     print("="*60)
     print(f"Architecture: {architecture}")
-    print(f"Num classes:  {args.num_classes}")
+    print(f"Num classes:  {num_classes}")
+    print(f"Class labels: {'yes (' + str(len(class_labels)) + ')' if class_labels else 'no'}")
+    print(f"Normalization: ImageNet (baked in)")
     print(f"Output path:  {output_path}")
     print("="*60)
 
@@ -142,7 +182,7 @@ def main():
     print("\nCreating model architecture...")
     model = create_model(
         architecture=architecture,
-        num_classes=args.num_classes,
+        num_classes=num_classes,
         pretrained=False,
         device="cpu",  # Export on CPU
     )
@@ -157,7 +197,7 @@ def main():
         model.load_state_dict(torch.load(args.model, map_location="cpu"))
 
     # Export
-    export_to_coreml(model, str(output_path))
+    export_to_coreml(model, str(output_path), class_labels=class_labels)
 
     print("\nExport complete!")
     print(f"\nNext steps:")

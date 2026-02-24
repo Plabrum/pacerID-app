@@ -115,10 +115,8 @@ final class SpyCameraService: ObservableObject, CameraServiceProtocol {
             return false
         }
 
-        for (index, expectedMethod) in expectedOrder.enumerated() {
-            if methodCalls[index] != expectedMethod {
-                return false
-            }
+        for (index, expectedMethod) in expectedOrder.enumerated() where methodCalls[index] != expectedMethod {
+            return false
         }
 
         return true

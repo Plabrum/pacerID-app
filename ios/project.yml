@@ -32,7 +32,7 @@ targets:
         excludes:
           - "*.md"
           - "*.txt"
-      - path: ../ml/models/PacemakerClassifier.mlpackage
+      - path: ../ml/models/PacerIDClassifier.mlpackage
         optional: true
 
     info:

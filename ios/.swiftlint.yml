@@ -13,6 +13,7 @@ disabled_rules:
   - line_length     # Let SwiftFormat handle this
   - todo            # TODOs are fine during development
   - trailing_comma  # Personal preference
+  - opening_brace   # Conflicts with SwiftFormat's wrapMultilineStatementBraces rule
 
 # Allow common short variable names
 identifier_name:
